@@ -117,11 +117,12 @@ class Elasticsearch5SearchBackend(ElasticsearchSearchBackend):
             index = haystack.connections[self.connection_alias]\
                 .get_unified_index()
             for facet_fieldname, extra_options in facets.items():
+                agg_type = extra_options.pop('agg_type', 'terms')
                 facet_options = {
                     'meta': {
-                        '_type': 'terms',
+                        '_type': agg_type,
                     },
-                    'terms': {
+                    agg_type: {
                         'field': index.get_facet_fieldname(facet_fieldname),
                     }
                 }
@@ -135,7 +136,7 @@ class Elasticsearch5SearchBackend(ElasticsearchSearchBackend):
                 if 'facet_filter' in extra_options:
                     facet_options['facet_filter'] = extra_options.pop(
                         'facet_filter')
-                facet_options['terms'].update(extra_options)
+                facet_options[agg_type].update(extra_options)
                 result[facet_fieldname] = facet_options
 
         if date_facets is not None:
