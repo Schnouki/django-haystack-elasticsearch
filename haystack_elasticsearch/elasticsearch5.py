@@ -314,7 +314,7 @@ class Elasticsearch5SearchBackend(ElasticsearchSearchBackend):
 
             for facet_fieldname, facet_info in raw_results['aggregations'].items():
                 facet_type = facet_info['meta']['_type']
-                if facet_type == 'terms':
+                if facet_type in ('terms', 'range'):
                     facets['fields'][facet_fieldname] = [(individual['key'], individual['doc_count']) for individual in facet_info['buckets']]
                     if 'order' in facet_info['meta']:
                         if facet_info['meta']['order'] == 'reverse_count':
