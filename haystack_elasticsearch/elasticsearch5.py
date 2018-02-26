@@ -117,6 +117,7 @@ class Elasticsearch5SearchBackend(ElasticsearchSearchBackend):
             index = haystack.connections[self.connection_alias]\
                 .get_unified_index()
             for facet_fieldname, extra_options in facets.items():
+                extra_options = extra_options.copy()
                 agg_type = extra_options.pop('agg_type', 'terms')
                 facet_options = {
                     'meta': {
